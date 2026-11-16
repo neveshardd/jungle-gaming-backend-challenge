@@ -1,5 +1,5 @@
-import { AppBar, Box, Button, Chip, Container, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
-import { IconApi, IconCircleFilled, IconPlant2 } from '@tabler/icons-react';
+import { AppBar, Box, Chip, Container, IconButton, Paper, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
+import { IconApi, IconCircleFilled, IconPlant2, IconWallet } from '@tabler/icons-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { api, isError, onRequest, type RequestLog, type Wallet } from './api';
 import { ActivityLog } from './components/ActivityLog';
@@ -7,6 +7,7 @@ import { LedgerTable } from './components/LedgerTable';
 import { ScenarioPanel } from './components/ScenarioPanel';
 import { WagerForm, type SentWager } from './components/WagerForm';
 import { WalletPanel } from './components/WalletPanel';
+import { WalletSummary } from './components/WalletSummary';
 
 const STORAGE_KEY = 'wagering-console:wallet-ids';
 
@@ -108,9 +109,6 @@ export function App() {
           <IconPlant2 color="#3ddc84" />
           <Typography variant="h6" fontWeight={700} sx={{ flex: 1 }}>
             Wagering Console
-            <Typography component="span" color="text.secondary" variant="body2" sx={{ ml: 1.5, display: { xs: 'none', sm: 'inline' } }}>
-              Distributed Wagering Processor
-            </Typography>
           </Typography>
           {health && (
             <Tooltip title={health.detail}>
@@ -119,13 +117,15 @@ export function App() {
                 variant="outlined"
                 color={health.ok ? 'success' : 'error'}
                 icon={<IconCircleFilled size={10} />}
-                label={health.ok ? 'API pronta' : 'API indisponível'}
+                label={health.ok ? 'API ok' : 'API fora'}
               />
             </Tooltip>
           )}
-          <Button size="small" color="inherit" variant="outlined" startIcon={<IconApi size={16} />} href="http://localhost:8080/docs" target="_blank">
-            Swagger
-          </Button>
+          <Tooltip title="Swagger da API">
+            <IconButton color="inherit" href="http://localhost:8080/docs" target="_blank">
+              <IconApi size={20} />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
 
@@ -141,20 +141,29 @@ export function App() {
           <Stack gap={2} minWidth={0}>
             <WalletPanel
               wallets={wallets}
-              selected={selected}
+              selectedId={selectedId}
               onCreated={(w) => upsertWallet(w)}
               onSelect={(id) => {
                 setSelectedId(id);
                 setRefreshKey((k) => k + 1);
               }}
-              onRefresh={refreshSelected}
             />
-            <ScenarioPanel onWallet={(w) => upsertWallet(w)} />
+            <ScenarioPanel onWallet={(w) => upsertWallet(w, false)} />
           </Stack>
 
           <Stack gap={2} minWidth={0}>
-            <WagerForm wallet={selected} history={history} onSent={onSent} />
-            <LedgerTable walletId={selected?.id} refreshKey={refreshKey} />
+            {selected ? (
+              <>
+                <WalletSummary wallet={selected} onRefresh={refreshSelected} />
+                <WagerForm key={selected.id} wallet={selected} history={history} onSent={onSent} />
+                <LedgerTable walletId={selected.id} refreshKey={refreshKey} />
+              </>
+            ) : (
+              <Paper sx={{ p: 6, textAlign: 'center', color: 'text.secondary' }}>
+                <IconWallet size={36} style={{ opacity: 0.5 }} />
+                <Typography mt={1}>Crie ou selecione uma wallet</Typography>
+              </Paper>
+            )}
           </Stack>
 
           <Box minWidth={0} sx={{ gridColumn: { md: '1 / -1', lg: 'auto' } }}>

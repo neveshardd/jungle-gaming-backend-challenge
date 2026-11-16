@@ -1,14 +1,4 @@
-import {
-  Button,
-  Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Button, Chip, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { IconArrowDownLeft, IconArrowUpRight, IconBook2, IconChevronDown } from '@tabler/icons-react';
 import { useCallback, useEffect, useState } from 'react';
 import { api, isError, type LedgerEntry } from '../api';
@@ -43,19 +33,9 @@ export function LedgerTable({ walletId, refreshKey }: { walletId: string | undef
   }, [load, refreshKey]);
 
   return (
-    <Panel
-      title="Ledger"
-      icon={<IconBook2 size={18} />}
-      action={
-        <Typography variant="caption" color="text.secondary">
-          append-only · cursor opaco
-        </Typography>
-      }
-    >
-      {!walletId ? (
-        <Empty>Nenhuma wallet selecionada.</Empty>
-      ) : entries.length === 0 ? (
-        <Empty>{loading ? 'Carregando…' : 'Sem lançamentos (saldo inicial zero, ou só LOSS / rejeições).'}</Empty>
+    <Panel title={`Ledger${entries.length ? ` (${entries.length}${cursor ? '+' : ''})` : ''}`} icon={<IconBook2 size={18} />}>
+      {!walletId ? null : entries.length === 0 ? (
+        <Empty>{loading ? 'Carregando…' : 'Sem lançamentos.'}</Empty>
       ) : (
         <TableContainer sx={{ maxHeight: 360 }}>
           <Table size="small" stickyHeader>

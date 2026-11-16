@@ -35,7 +35,7 @@ export function ActivityLog({ entries, onClear }: { entries: RequestLog[]; onCle
       }
     >
       {entries.length === 0 ? (
-        <Empty>Cada requisição aparece aqui com status, chave de idempotência, correlation id e resposta.</Empty>
+        <Empty>Nenhuma requisição ainda.</Empty>
       ) : (
         <List dense disablePadding sx={{ overflow: 'auto', maxHeight: { lg: 'calc(100vh - 190px)' }, minHeight: 200 }}>
           {entries.map((e) => (
