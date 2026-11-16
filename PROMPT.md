@@ -1,5 +1,15 @@
 # Prompt — Distributed Wagering Processor (Jungle Gaming)
 
+> **Nota sobre este arquivo**
+>
+> Mantive este arquivo no repositório de propósito, por transparência sobre o processo. Usei IA (Claude Code) como ferramenta de desenvolvimento, e este é o prompt que escrevi para conduzi-la.
+>
+> Ele mostra como estruturei o trabalho: as decisões técnicas definidas antes de qualquer código (ORM, estratégia de concorrência, topologia, escopo de autenticação), a ordem das entregas, os critérios de pronto e as restrições inegociáveis do desafio.
+>
+> A responsabilidade pelo resultado é minha. Revisei as escolhas e validei tudo com testes reais. Os problemas encontrados nessa validação estão registrados em [PROGRESS.md](PROGRESS.md), e as decisões em [ARCHITECTURE.md](ARCHITECTURE.md). Fico à disposição para discutir qualquer parte na apresentação.
+
+---
+
 > Cole este prompt no Claude Code com o diretório `D:\jungle.gaming\backend-challenge` aberto.
 > O enunciado completo está em `CHALLENGE.md` — ele é a fonte da verdade. Este prompt fixa decisões, ordem de trabalho e critério de pronto.
 

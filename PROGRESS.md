@@ -7,8 +7,8 @@ Todas as fases estão implementadas e **validadas com execução real** em 16/11
 | Verificação | Resultado |
 |---|---|
 | `bun run typecheck` | sem erros |
-| `bun test` no Windows (Postgres e LocalStack reais) | 187 pass, 1 skip (o `SIGTERM` gracioso é pulado em win32), 0 fail |
-| `docker compose --profile test run --rm tests` (Linux) | **188 pass, 0 fail**, incluindo o `SIGTERM` gracioso |
+| `bun test` no Windows (Postgres e LocalStack reais) | 188 pass, 1 skip (o `SIGTERM` gracioso é pulado em win32), 0 fail |
+| `docker compose --profile test run --rm tests` (Linux) | **189 pass, 0 fail**, incluindo o `SIGTERM` gracioso |
 | `docker compose up -d --build` (3 réplicas + nginx) | healthy; smoke via HTTP e via SQS ok |
 | `bun run test:load` (60 s, 50 VUs) | 285 req/s, 0% de erro, 0 conflitos de lock, 201/201 wallets consistentes |
 
