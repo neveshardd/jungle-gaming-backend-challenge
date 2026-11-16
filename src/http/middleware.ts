@@ -21,7 +21,7 @@ export function correlationMiddleware(logger: Logger) {
           statusCode: res.statusCode,
           durationMs: Math.round((performance.now() - startedAt) * 100) / 100,
         };
-        if (QUIET_PATHS.has(req.path)) logger.debug(line, 'http request');
+        if (QUIET_PATHS.has(req.path) || req.path.startsWith('/docs')) logger.debug(line, 'http request');
         else logger.info(line, 'http request');
       });
       next();

@@ -200,6 +200,36 @@ describe('queries', () => {
   });
 });
 
+describe('OpenAPI / Swagger', () => {
+  it('serves the Swagger UI at /docs and the OpenAPI document at /docs-json', async () => {
+    const ui = await fetch(`${http.baseUrl}/docs`);
+    expect(ui.status).toBe(200);
+    expect(await ui.text()).toContain('swagger-ui');
+
+    const spec = await getJson(http.baseUrl, '/docs-json');
+    expect(spec.status).toBe(200);
+    const paths = spec.body.paths as Record<string, Record<string, unknown>>;
+    expect(Object.keys(paths)).toEqual(
+      expect.arrayContaining([
+        '/wallets',
+        '/wallets/{walletId}',
+        '/wallets/{walletId}/ledger',
+        '/wallets/{walletId}/reconciliation',
+        '/wagering/transactions',
+        '/wagering/transactions/{transactionId}',
+        '/providers/{providerId}/wagering/transactions/{externalTransactionId}',
+        '/health/live',
+        '/health/ready',
+      ]),
+    );
+    const submit = paths['/wagering/transactions']?.post as { responses: Record<string, unknown>; parameters: Array<{ name: string }> };
+    expect(Object.keys(submit.responses)).toEqual(expect.arrayContaining(['200', '201', '202', '400', '404', '409', '422', '503']));
+    expect(submit.parameters.map((p) => p.name)).toContain('Idempotency-Key');
+    const schemas = (spec.body.components as { schemas: Record<string, unknown> }).schemas;
+    expect(Object.keys(schemas)).toEqual(expect.arrayContaining(['Money', 'WagerRequest', 'WagerResult', 'Error']));
+  });
+});
+
 describe('health and metrics (no auth)', () => {
   it('liveness, readiness, metrics', async () => {
     expect((await getJson(http.baseUrl, '/health/live')).body).toEqual({ status: 'ok' });

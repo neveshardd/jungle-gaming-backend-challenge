@@ -17,6 +17,7 @@ import { WageringController } from './controllers/wagering.controller';
 import { WalletsController } from './controllers/wallets.controller';
 import { HttpErrorFilter } from './http-error.filter';
 import { correlationMiddleware, jsonBodyMiddleware } from './middleware';
+import { setupOpenApi } from './openapi';
 
 /** Builds the Nest module around an already-wired container. Worker-only instances expose only health/metrics. */
 function buildModule(container: Container, role: AppRole) {
@@ -51,5 +52,6 @@ export async function createHttpApp(container: Container, role: AppRole): Promis
   app.use(jsonBodyMiddleware);
   app.useGlobalFilters(new HttpErrorFilter(container.logger));
   app.getHttpAdapter().getInstance().disable('x-powered-by');
+  setupOpenApi(app); // Swagger UI at /docs, OpenAPI JSON at /docs-json
   return app;
 }
