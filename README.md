@@ -8,7 +8,7 @@ O serviço continua correto quando as mensagens chegam **duplicadas**, **fora de
 |---|---|
 | **Stack** | Bun 1.x · TypeScript estrito · NestJS · PostgreSQL 16 · MikroORM 6 · SQS (LocalStack) · Docker Compose |
 | **Garantias** | idempotência persistente · lock pessimista por wallet · ledger append-only · inbox e outbox transacionais · invariantes aplicadas **no schema** |
-| **Testes** | 189 testes (unidade, integração e concorrência) com **Postgres e LocalStack reais**, incluindo 3 processos simultâneos e crash por `SIGKILL` |
+| **Testes** | 189 testes do backend (unidade, integração e concorrência) com **Postgres e LocalStack reais**, incluindo 3 processos simultâneos e crash por `SIGKILL`, além de 5 testes do console |
 | **Interfaces** | console de teste (React + Material UI) e Swagger |
 
 As decisões técnicas, os trade-offs e as limitações estão em **[ARCHITECTURE.md](ARCHITECTURE.md)**. Os números do teste de carga estão em **[docs/LOAD_TEST.md](docs/LOAD_TEST.md)**.
@@ -253,8 +253,9 @@ docker compose up -d postgres localstack
 | `bun run test:unit` | domínio puro: `Money`, `Wallet`, ledger, regras de cada operação, transições de estado, hash de idempotência |
 | `bun run test:integration` | migrations `up → down → up` e **cada constraint e trigger** testados com SQL direto; atomicidade; HTTP de ponta a ponta; SQS (inbox, replay, DLQ, retry); outbox; referências pendentes; Swagger |
 | `bun run test:concurrency` | os 8 cenários obrigatórios, com paralelismo real: **3 processos independentes**, `SIGKILL` depois do commit e antes do ack, dois publishers, restart com consistência final |
-| `bun test` | tudo |
+| `bun test` | todas as suítes do backend acima |
 | `bun run typecheck` / `bun run lint` | TypeScript estrito e ESLint |
+| `cd web && bun test` | testes do console (máscara e validação de dinheiro) |
 
 Para rodar a suíte inteira **dentro do Linux** (recomendado no Windows, porque lá o teste de `SIGTERM` gracioso também roda):
 
@@ -262,7 +263,7 @@ Para rodar a suíte inteira **dentro do Linux** (recomendado no Windows, porque 
 docker compose --profile test run --rm tests
 ```
 
-Resultado da última execução: **189 aprovados e 0 falhas no Linux**. No Windows são 188 aprovados e 1 ignorado, o `SIGTERM`, porque o Windows não entrega sinais POSIX. Todos os testes de integração e de concorrência terminam verificando a invariante `wallet.balance == saldo reconstruído pelo ledger`.
+Resultado da última execução, a partir de um clone limpo do repositório: o `bun test` roda **189 testes do backend**. No Linux (`docker compose --profile test run --rm tests`) são **189 aprovados e 0 falhas**. No Windows são 188 aprovados e 1 ignorado, o `SIGTERM` gracioso, porque o Windows não entrega sinais POSIX. Os 5 testes do console rodam à parte, com `cd web && bun test`. Todos os testes de integração e de concorrência terminam verificando a invariante `wallet.balance == saldo reconstruído pelo ledger`.
 
 > Cada arquivo de teste recria o schema do banco `wagering_test` aplicando as migrations reais. Variáveis úteis: `TEST_DATABASE_URL`, `AWS_ENDPOINT_URL` e `TEST_LOG_LEVEL=debug`.
 

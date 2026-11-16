@@ -2,12 +2,13 @@
 
 ## Estado atual
 
-Todas as fases estão implementadas e **validadas com execução real** em 16/11/2026.
+Todas as fases estão implementadas e **validadas com execução real** em 16/11/2026, inclusive a partir de um **clone limpo do GitHub**: build sem cache, `docker compose up`, um smoke de ponta a ponta (34 verificações cobrindo HTTP, idempotência, regras, referência fora de ordem, SQS com DLQ, outbox, reconciliação, métricas, Swagger e console) e as suítes de teste.
 
 | Verificação | Resultado |
 |---|---|
 | `bun run typecheck` | sem erros |
 | `bun test` no Windows (Postgres e LocalStack reais) | 188 pass, 1 skip (o `SIGTERM` gracioso é pulado em win32), 0 fail |
+| `cd web && bun test` (console) | 5 pass, 0 fail |
 | `docker compose --profile test run --rm tests` (Linux) | **189 pass, 0 fail**, incluindo o `SIGTERM` gracioso |
 | `docker compose up -d --build` (3 réplicas + nginx) | healthy; smoke via HTTP e via SQS ok |
 | `bun run test:load` (60 s, 50 VUs) | 285 req/s, 0% de erro, 0 conflitos de lock, 201/201 wallets consistentes |

@@ -1,0 +1,4 @@
+# `bun test` at the repository root runs only the backend suites (test/).
+# The console has its own tests: `cd web && bun test`.
+[test]
+root = "./test"
