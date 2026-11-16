@@ -25,6 +25,7 @@ O comando sobe o seguinte:
 | `migrate` | Roda as migrations uma vez (`bun src/infrastructure/database/migrate.ts up`) |
 | `app` ×3 | Três réplicas com `APP_ROLE=all`: HTTP, consumidor SQS, publisher da outbox e worker de referências pendentes |
 | `lb` | nginx em `http://localhost:8080`, em round-robin entre as réplicas |
+| `web` | **Console de teste** em `http://localhost:5173` (React, Material UI e Tabler Icons) |
 | `jaeger` | Opcional, ativado com `--profile otel`, em `http://localhost:16686` |
 
 Para ligar os traces:
@@ -32,6 +33,18 @@ Para ligar os traces:
 ```bash
 OTEL_ENABLED=true docker compose --profile otel up -d --build
 ```
+
+## Interfaces para testar
+
+- **Console de teste:** `http://localhost:5173`. Pelo console dá para:
+  - criar wallets e enviar BET, WIN, LOSS, REFUND e ROLLBACK;
+  - reenviar a mesma chave (replay) e forçar um conflito (409);
+  - ver o ledger paginado e reconciliar;
+  - acompanhar cada requisição (status, `Idempotency-Key`, correlation id, request e response);
+  - rodar com um clique os cenários do desafio: corrida 80/80, mesma aposta 50×, conflito, REFUND antes da BET, ROLLBACK sem saldo e reversão dupla.
+
+  Em desenvolvimento, use `cd web && bun install && bun run dev`. O Vite faz proxy de `/api` para `localhost:8080`.
+- **Swagger:** `http://localhost:8080/docs`. O documento OpenAPI fica em `/docs-json`.
 
 ## Exemplos
 
@@ -134,6 +147,7 @@ src/
   observability/  logs (pino), métricas (Prometheus), tracing (OpenTelemetry), contexto de correlação
   http/           NestJS: controllers, filtro de erros, guard de autenticação (no-op)
   bootstrap/      composition root (Container)
+web/              console de teste (Vite, React, Material UI, Tabler Icons)
 test/
   unit/ integration/ concurrency/ load/ support/
 ```

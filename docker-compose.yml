@@ -94,6 +94,14 @@ services:
       app:
         condition: service_healthy
 
+  # Test console (React + Material UI) at http://localhost:5173
+  web:
+    build: ./web
+    ports:
+      - '5173:80'
+    depends_on:
+      - lb
+
   jaeger:
     image: jaegertracing/all-in-one:1.62.0
     profiles: ['otel']
