@@ -40,7 +40,7 @@ export function ActivityLog({ entries, onClear }: { entries: RequestLog[]; onCle
         <List dense disablePadding sx={{ overflow: 'auto', maxHeight: { lg: 'calc(100vh - 190px)' }, minHeight: 200 }}>
           {entries.map((e) => (
             <Box key={e.id}>
-              <ListItemButton onClick={() => setOpen(open === e.id ? undefined : e.id)} sx={{ borderRadius: 1.5, gap: 1, py: 0.5 }}>
+              <ListItemButton onClick={() => setOpen(open === e.id ? undefined : e.id)} sx={{ gap: 1, py: 0.5 }}>
                 <StatusChip status={e.status} />
                 <Mono style={{ opacity: 0.6, width: 36 }}>{e.method}</Mono>
                 <Box flex={1} minWidth={0}>

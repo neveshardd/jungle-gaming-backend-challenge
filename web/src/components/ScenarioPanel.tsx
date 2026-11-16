@@ -3,6 +3,7 @@ import { IconCircleCheckFilled, IconCircleXFilled, IconFlask, IconPlayerPlay } f
 import { useState } from 'react';
 import type { Wallet } from '../api';
 import { SCENARIOS, type ScenarioResult } from '../scenarios';
+import { SURFACE } from '../theme';
 import { Panel } from './common';
 
 type State = { running: boolean; result?: ScenarioResult; error?: string };
@@ -33,9 +34,8 @@ export function ScenarioPanel({ onWallet }: { onWallet: (wallet: Wallet) => void
             <Box
               key={s.id}
               sx={{
-                border: 1,
-                borderColor: passed === undefined ? 'divider' : passed ? 'success.main' : 'error.main',
-                borderRadius: 2,
+                bgcolor: passed === undefined ? SURFACE : passed ? 'rgba(61, 220, 132, 0.08)' : 'rgba(255, 107, 107, 0.08)',
+                borderRadius: 1,
                 p: 1.25,
               }}
             >

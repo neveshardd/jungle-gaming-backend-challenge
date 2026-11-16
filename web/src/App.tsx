@@ -103,7 +103,7 @@ export function App() {
 
   return (
     <Box minHeight="100vh">
-      <AppBar position="sticky" color="transparent" elevation={0} sx={{ backdropFilter: 'blur(8px)', borderBottom: 1, borderColor: 'divider' }}>
+      <AppBar position="sticky" color="transparent" elevation={0} sx={{ backdropFilter: 'blur(8px)', bgcolor: 'rgba(20, 28, 24, 0.85)' }}>
         <Toolbar sx={{ gap: 1.5 }}>
           <IconPlant2 color="#3ddc84" />
           <Typography variant="h6" fontWeight={700} sx={{ flex: 1 }}>

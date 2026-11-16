@@ -24,8 +24,10 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { api, isError, type Reconciliation, type Wallet } from '../api';
-import { MONO } from '../theme';
+import { MONO, SURFACE } from '../theme';
+import { validateAmount } from '../money';
 import { Empty, Mono, Panel } from './common';
+import { MoneyField } from './MoneyField';
 
 interface Props {
   wallets: Wallet[];
@@ -84,15 +86,14 @@ export function WalletPanel({ wallets, selected, onCreated, onSelect, onRefresh 
             },
           }}
         />
-        <TextField
-          label="Saldo inicial"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          sx={{ maxWidth: 130 }}
-          slotProps={{ input: { endAdornment: <InputAdornment position="end">BRL</InputAdornment> } }}
-        />
+        <MoneyField label="Saldo inicial" value={amount} onChange={setAmount} allowZero sx={{ maxWidth: 170 }} />
       </Stack>
-      <Button variant="contained" startIcon={<IconPlus size={18} />} onClick={create} disabled={busy}>
+      <Button
+        variant="contained"
+        startIcon={<IconPlus size={18} />}
+        onClick={create}
+        disabled={busy || Boolean(validateAmount(amount, { allowZero: true }))}
+      >
         Criar wallet
       </Button>
       {error && (
@@ -110,7 +111,7 @@ export function WalletPanel({ wallets, selected, onCreated, onSelect, onRefresh 
               key={w.id}
               selected={w.id === selected?.id}
               onClick={() => onSelect(w.id)}
-              sx={{ borderRadius: 2, border: 1, borderColor: w.id === selected?.id ? 'primary.main' : 'divider' }}
+              sx={{ bgcolor: w.id === selected?.id ? undefined : SURFACE }}
             >
               <ListItemText primary={<Mono>{w.id.slice(0, 13)}…</Mono>} />
               <Mono>{w.balance.amount}</Mono>

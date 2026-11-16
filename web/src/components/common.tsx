@@ -1,7 +1,7 @@
 import { Box, Chip, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import type { ReactNode } from 'react';
-import { MONO, statusColor } from '../theme';
+import { MONO, statusColor, SURFACE } from '../theme';
 
 /** Section card with an overline title and an optional action on the right. */
 export function Panel({
@@ -47,11 +47,10 @@ export function StatusChip({ status }: { status: number }) {
 
 export const Mono = styled('span')({ fontFamily: MONO, fontSize: 12 });
 
-export const Code = styled('pre')(({ theme }) => ({
+export const Code = styled('pre')({
   margin: 0,
   background: '#0b100e',
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: 8,
+  borderRadius: 4,
   padding: 10,
   fontFamily: MONO,
   fontSize: 12,
@@ -60,7 +59,7 @@ export const Code = styled('pre')(({ theme }) => ({
   maxHeight: 260,
   whiteSpace: 'pre-wrap',
   wordBreak: 'break-word',
-}));
+});
 
 export function Empty({ children }: { children: ReactNode }) {
   return (
@@ -70,10 +69,8 @@ export function Empty({ children }: { children: ReactNode }) {
         fontSize: 13,
         p: 2.5,
         textAlign: 'center',
-        border: 1,
-        borderStyle: 'dashed',
-        borderColor: 'divider',
-        borderRadius: 2,
+        bgcolor: SURFACE,
+        borderRadius: 1,
       }}
     >
       {children}

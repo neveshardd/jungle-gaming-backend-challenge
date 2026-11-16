@@ -15,7 +15,9 @@ import { IconArrowsExchange, IconCopy, IconDice5, IconRepeat, IconSend } from '@
 import { useMemo, useState } from 'react';
 import { api, isError, newExternalId, type WagerKind, type WagerPayload, type Wallet } from '../api';
 import { MONO } from '../theme';
+import { validateAmount } from '../money';
 import { Code, Empty, Mono, Panel, StatusChip } from './common';
+import { MoneyField } from './MoneyField';
 
 export interface SentWager {
   key: string;
@@ -116,14 +118,7 @@ export function WagerForm({ wallet, history, onSent }: Props) {
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          label="Valor"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          helperText='string decimal, ex.: "25.00"'
-          sx={{ flex: 1 }}
-          slotProps={{ input: { endAdornment: <InputAdornment position="end">BRL</InputAdornment> } }}
-        />
+        <MoneyField label="Valor" value={amount} onChange={setAmount} sx={{ flex: 1.3 }} />
         <TextField label="roundId" value={roundId} onChange={(e) => setRoundId(e.target.value)} sx={{ flex: 1 }} />
         <TextField label="providerId" value={providerId} onChange={(e) => setProviderId(e.target.value)} sx={{ flex: 1 }} />
       </Stack>
@@ -194,7 +189,12 @@ export function WagerForm({ wallet, history, onSent }: Props) {
       </Stack>
 
       <Stack direction="row" gap={1} flexWrap="wrap">
-        <Button variant="contained" startIcon={<IconSend size={18} />} disabled={busy} onClick={() => send('Enviar', payload, key, true)}>
+        <Button
+          variant="contained"
+          startIcon={<IconSend size={18} />}
+          disabled={busy || Boolean(validateAmount(amount, { allowZero: false }))}
+          onClick={() => send('Enviar', payload, key, true)}
+        >
           Enviar
         </Button>
         <Tooltip title="Reenvia exatamente o último request: mesma chave e mesmo payload">
